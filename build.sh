@@ -11,6 +11,7 @@ function on_exit() {
 topdir="$(dirname "$(realpath "${0}")")"
 
 set -e
+set -x
 
 trap on_exit EXIT
 
@@ -26,12 +27,21 @@ br2_externals="${topdir}/pkg1"
 
 
 pkgdir="${topdir}/pkg1"
-mkdir "${topdir}/pkg1/configs" || error_exit "Could not create ${topdir}/pkg1/configs"
+
+if [ ! -e "${topdir}/pkg1/configs" ] ; then 
+    mkdir -p "${topdir}/pkg1/configs" || error_exit "Could not create ${topdir}/pkg1/configs"
+fi
+
 cd "${pkgdir}" || error_exit "could not change into ${pkgdir}"
+
+if [ ! -e "${br2_out_dir}/.config" ] ; then
+    make -C "${brdir}" O="${br2_out_dir}" BR2_EXTERNAL="${br2_externals}" pc_x86_64_efi_defconfig
+fi
+
 if [ -e "configs"/${dot_config_name} ] ; then
     echo "already have defconfig: ${sdkdir}/configs/${dot_config_name}"
 else 
-    cp "${brdir}/.config" "configs/${dot_config_name}"
+    cp "${br2_out_dir}/.config" "configs/${dot_config_name}"
 fi
 
 mkdir -p "${br2_out_dir}" || error_exit "Could not create output directory ${br2_out_dir}"
