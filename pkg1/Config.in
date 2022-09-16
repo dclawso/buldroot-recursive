@@ -1,0 +1,5 @@
+config BR2_EXTERNAL_TEST_PKG1
+    bool "test_package1"
+    default y
+    help
+        Include test package 1    
