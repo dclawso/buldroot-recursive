@@ -26,6 +26,7 @@ br2_externals="${topdir}/pkg1"
 
 
 pkgdir="${topdir}/pkg1"
+mkdir "${topdir}/pkg1/configs" || error_exit "Could not create ${topdir}/pkg1/configs"
 cd "${pkgdir}" || error_exit "could not change into ${pkgdir}"
 if [ -e "configs"/${dot_config_name} ] ; then
     echo "already have defconfig: ${sdkdir}/configs/${dot_config_name}"
